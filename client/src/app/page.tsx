@@ -1,5 +1,4 @@
 "use client"
-
 import { useState, useRef, useEffect } from "react"
 import * as Tone from "tone"
 
@@ -50,19 +49,12 @@ export default function GuitarTuner() {
         }
 
         if (maxIndex > 0) {
-          // Convert the FFT bin index to a frequency
           const frequency = (maxIndex * Tone.context.sampleRate) / (analyserRef.current.size * 2)
-
-          // Only update if we have a reasonable frequency (above 70Hz to filter out noise)
           if (frequency > 70 && frequency < 1000) {
             setCurrentFrequency(frequency)
-
-            // Find the closest note and calculate how far off we are
             const targetFreq = guitarStrings[selectedString].frequency
             const cents = 1200 * Math.log2(frequency / targetFreq)
-
             setTuningDifference(cents)
-
             if (Math.abs(cents) < 5) {
               setTuningStatus("in-tune")
             } else if (cents < 0) {
@@ -85,13 +77,10 @@ export default function GuitarTuner() {
   }
 
   const stopTuning = () => {
-    // Cancel the animation frame to stop the loop
     if (animationRef.current) {
       cancelAnimationFrame(animationRef.current)
       animationRef.current = null
     }
-
-    // Close the microphone
     if (micRef.current) {
       micRef.current.close()
       micRef.current = null
@@ -111,8 +100,6 @@ export default function GuitarTuner() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white p-4">
       <h1 className="text-4xl font-bold mb-8 text-center">Guitar Tuner</h1>
-
-      {/* String selector */}
       <div className="w-full max-w-md mb-8">
         <h2 className="text-xl font-semibold mb-4 text-center">Select String</h2>
         <div className="grid grid-cols-6 gap-1">
@@ -130,8 +117,6 @@ export default function GuitarTuner() {
           ))}
         </div>
       </div>
-
-      {/* Current string info */}
       <div className="w-full max-w-md mb-8 bg-gray-800 rounded-lg p-4 text-center">
         <h2 className="text-2xl font-bold">
           {guitarStrings[selectedString].note} String
@@ -139,21 +124,17 @@ export default function GuitarTuner() {
         </h2>
       </div>
 
-      {/* Tuning indicator */}
       <div className="w-full max-w-md mb-8">
         <div className="relative h-20 bg-gray-800 rounded-lg overflow-hidden">
-          {/* Tuning scale */}
           <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
             <div className="w-full h-1 bg-gray-700 flex">
               <div className="w-1/3 h-full bg-red-500"></div>
               <div className="w-1/3 h-full bg-green-500"></div>
               <div className="w-1/3 h-full bg-red-500"></div>
             </div>
-            {/* Center line */}
             <div className="absolute h-12 w-0.5 bg-white"></div>
           </div>
 
-          {/* Tuning needle */}
           {tuningStatus && (
             <div
               className={`absolute top-0 left-1/2 h-full w-2 bg-white -ml-1 transition-transform duration-150 ease-out ${
@@ -165,7 +146,6 @@ export default function GuitarTuner() {
             ></div>
           )}
 
-          {/* Labels */}
           <div className="absolute bottom-2 left-0 w-full flex justify-between px-4 text-xs">
             <span>♭ Flat</span>
             <span>In Tune</span>
@@ -174,7 +154,6 @@ export default function GuitarTuner() {
         </div>
       </div>
 
-      {/* Frequency display */}
       {currentFrequency && (
         <div className="w-full max-w-md mb-8 bg-gray-800 rounded-lg p-4 text-center">
           <p className="text-lg">
@@ -188,7 +167,6 @@ export default function GuitarTuner() {
         </div>
       )}
 
-      {/* Control buttons */}
       <div className="flex gap-4">
         <button
           className={`px-6 py-3 rounded-lg text-lg font-semibold transition-all ${
@@ -200,7 +178,6 @@ export default function GuitarTuner() {
         </button>
       </div>
 
-      {/* Instructions */}
       <div className="mt-8 text-center text-gray-400 text-sm max-w-md">
         <p>Select a string, then click Start Listening and play the string on your guitar.</p>
         <p className="mt-2">Adjust your tuning until the needle is centered and turns green.</p>

@@ -24,9 +24,8 @@ const detectPitchInChunks = (audioBuffer, chunkDuration = 0.25) => {
   
   const pitches = [];
   const detectPitch = Pitchfinder.YIN({
-    // Adjust these parameters to improve pitch detection
-    threshold: 0.28,  // Lower threshold can help detect weaker signals
-    probability: true  // Returns confidence with pitch
+    threshold: 0.28,
+    probability: true
   });
 
   for (let start = 0; start < float32Array.length; start += samplesPerChunk) {
